@@ -14,6 +14,7 @@ import com.paypal.android.BuildConfig
 import com.paypal.android.api.services.PayPalDemoApi
 import com.paypal.android.checkout.PayPalCheckoutResult
 import com.paypal.android.checkout.PayPalClient
+import com.paypal.android.checkout.PayPalCreateOrder
 import com.paypal.android.checkout.PayPalListener
 import com.paypal.android.core.APIClientError
 import com.paypal.android.core.CoreConfig
@@ -65,7 +66,10 @@ class PayPalNativeFragment : Fragment(), PayPalListener {
                 )
                 paypalNativeClient.listener = this@PayPalNativeFragment
                 order.id?.let { orderId ->
-                    paypalNativeClient.startCheckout(orderId)
+                    paypalNativeClient.startCheckout(
+                        PayPalCreateOrder { payPalCreateOrderActions ->
+                            payPalCreateOrderActions.set(orderId)
+                        })
                 }
             } catch (e: UnknownHostException) {
                 Log.e(TAG, e.message!!)

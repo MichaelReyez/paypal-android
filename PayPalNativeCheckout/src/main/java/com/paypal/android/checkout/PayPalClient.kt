@@ -35,13 +35,12 @@ class PayPalClient internal constructor (
             }
         }
 
-    //TODO: add start checkout with Create Order actions
     /**
      * Initiate a PayPal checkout for an order.
      *
-     * @param orderId the id of the order
+     * @param payPalCreateOrder necessary to start the PaySheet, defines actions for order creation
      */
-    suspend fun startCheckout(orderId: String) {
+    suspend fun startCheckout(payPalCreateOrder: PayPalCreateOrder) {
         val config = CheckoutConfig(
             application = application,
             clientId = api.getClientId(),
@@ -50,7 +49,7 @@ class PayPalClient internal constructor (
         )
         PayPalCheckout.setConfig(config)
         PayPalCheckout.startCheckout(CreateOrder { createOrderActions ->
-            createOrderActions.set(orderId)
+            payPalCreateOrder.create(PayPalCreateOrderActions(createOrderActions))
         })
     }
 
