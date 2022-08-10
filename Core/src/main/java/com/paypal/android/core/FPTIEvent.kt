@@ -7,15 +7,15 @@ data class FPTIEvent(
     val timestamp: Long,
     val level: String,
     val payload: Payload
-) {
+) : JSONRepresentable {
 
     data class Payload(val from: String, val to: String) {
-        fun toJSON() = JSONObject()
+        fun toJSON(): JSONObject = JSONObject()
             .put("from", from)
             .put("to", to)
     }
 
-    fun toJSON() = JSONObject()
+    override fun toJSON(): JSONObject = JSONObject()
         .put("event", event)
         .put("timeStamp", timestamp)
         .put("level", level)
