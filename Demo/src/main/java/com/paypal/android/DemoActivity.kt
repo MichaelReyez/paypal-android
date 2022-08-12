@@ -4,18 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
+import com.paypal.android.core.AnalyticsAPI
+import com.paypal.android.core.FPTIEvent
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DemoActivity : AppCompatActivity() {
 
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+
+    private val analyticsAPI = AnalyticsAPI()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +35,10 @@ class DemoActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+
+        lifecycleScope.launch {
+            analyticsAPI.send(FPTIEvent("test from Team SDK", 0, "sandbox", FPTIEvent.Payload("key", "value")))
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
