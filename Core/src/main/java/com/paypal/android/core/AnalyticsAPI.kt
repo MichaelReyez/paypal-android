@@ -26,7 +26,6 @@ class AnalyticsAPI {
             }
         """.trimIndent()
         val request = HttpRequest(url, HttpMethod.POST, requestBody)
-//        val request = HttpRequest(url, HttpMethod.POST, FPTIUploadRequest(listOf(event)).toJSON().toString())
         val response = http.send(request)
         Log.d("Status", response.status.toString())
     }
