@@ -20,7 +20,7 @@ class AnalyticsAPI {
                 "event_params": {
                   "e": "la",
                   "t": $timestamp,
-                  "event_name": "hello_from_team_sdk",
+                  "event_name": "hello_from_team_sdk"
                 }
               }
             }
