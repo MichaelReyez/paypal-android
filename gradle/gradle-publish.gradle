@@ -11,11 +11,10 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 groupId group
-                version modules.sdkVersionName
+                version project.version
                 artifactId project.ext.name
                 from components.release
                 artifact androidSourcesJar //TODO: add javadocs
-                println "${group} ${project.ext.name} ${modules.sdkVersionName}"
                 pom {
                     name = project.ext.pom_name ?: ''
                     packaging = POM_PACKAGING

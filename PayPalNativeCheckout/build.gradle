@@ -13,7 +13,7 @@ android {
         minSdkVersion 23
         targetSdkVersion modules.androidTargetVersion
         versionCode modules.sdkVersionCode
-        versionName modules.sdkVersionNam
+        versionName rootProject.version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
