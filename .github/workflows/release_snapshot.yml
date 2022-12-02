@@ -12,104 +12,104 @@ env:
   SIGNING_KEY_FILE_PATH: /home/runner/secretKey.gpg
 jobs:
   #First we build
-#  build_aar:
-#    name: Build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#      - name: Set up Java 11
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'microsoft'
-#          #After decoding the secret key, place the file in ~ /. Gradle/ secring.gpg
-#      - name: Decode Signing Key
-#        uses: ./.github/actions/decode_signing_key_action
-#        with:
-#          signing_key_file: ${{ secrets.SIGNING_KEY_FILE }}
-#          signing_file_path: ${{ env.SIGNING_KEY_FILE_PATH }}
-#      - name: Assemble
-#        run: ./gradlew --stacktrace assemble -x :Demo:assemble # we exclude Demo from assemble
-#        env:
-#          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-#          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-#          SIGNING_KEY_FILE: ${{ env.SIGNING_KEY_FILE_PATH }}
-#
-#  #Once building is finished, we unit test every module in parallel
-#  unit_test_core:
-#    name: Core Unit Tests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#      - name: Set up Java 11
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'microsoft'
-#      - name: Run Unit Tests
-#        uses: ./.github/actions/unit_test_module
-#        with:
-#          module: Card
-#
-#  unit_test_card:
-#    name: Card Unit Tests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#      - name: Set up Java 11
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'microsoft'
-#      - name: Run Unit Tests
-#        uses: ./.github/actions/unit_test_module
-#        with:
-#          module: Card
-#  unit_test_paypal:
-#    name: PayPal Web Unit Tests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#      - name: Set up Java 11
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'microsoft'
-#      - name: Run Unit Tests
-#        uses: ./.github/actions/unit_test_module
-#        with:
-#          module: PayPalWebCheckout
-#  unit_test_paypal_native:
-#    name: PayPal Native Unit Tests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#      - name: Set up Java 11
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'microsoft'
-#      - name: Run Unit Tests
-#        uses: ./.github/actions/unit_test_module
-#        with:
-#          module: PayPalNativeCheckout
-#
-#  unit_test_finished:
-#    needs: [unit_test_card, unit_test_core, unit_test_paypal, unit_test_paypal_native]
-#    name: All Unit Test finished
-#    runs-on: ubuntu-latest
-#    steps:
-#      - run: echo "Unit test finished"
+  build_aar:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'microsoft'
+          #After decoding the secret key, place the file in ~ /. Gradle/ secring.gpg
+      - name: Decode Signing Key
+        uses: ./.github/actions/decode_signing_key_action
+        with:
+          signing_key_file: ${{ secrets.SIGNING_KEY_FILE }}
+          signing_file_path: ${{ env.SIGNING_KEY_FILE_PATH }}
+      - name: Assemble
+        run: ./gradlew --stacktrace assemble -x :Demo:assemble # we exclude Demo from assemble
+        env:
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_KEY_FILE: ${{ env.SIGNING_KEY_FILE_PATH }}
+
+  #Once building is finished, we unit test every module in parallel
+  unit_test_core:
+    name: Core Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'microsoft'
+      - name: Run Unit Tests
+        uses: ./.github/actions/unit_test_module
+        with:
+          module: Card
+
+  unit_test_card:
+    name: Card Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'microsoft'
+      - name: Run Unit Tests
+        uses: ./.github/actions/unit_test_module
+        with:
+          module: Card
+  unit_test_paypal:
+    name: PayPal Web Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'microsoft'
+      - name: Run Unit Tests
+        uses: ./.github/actions/unit_test_module
+        with:
+          module: PayPalWebCheckout
+  unit_test_paypal_native:
+    name: PayPal Native Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'microsoft'
+      - name: Run Unit Tests
+        uses: ./.github/actions/unit_test_module
+        with:
+          module: PayPalNativeCheckout
+
+  unit_test_finished:
+    needs: [unit_test_card, unit_test_core, unit_test_paypal, unit_test_paypal_native]
+    name: All Unit Test finished
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Unit test finished"
 
   # after build and unit tests are finished, publish all modules at once
   # to help reduce the probability of failure when interacting with sonatype servers
   publish_all_modules:
-#    needs: [ unit_test_finished, build_aar ]
+    needs: [ unit_test_finished, build_aar ]
     name: Publish All Modules To Sonatype
     runs-on: ubuntu-latest
     steps:
