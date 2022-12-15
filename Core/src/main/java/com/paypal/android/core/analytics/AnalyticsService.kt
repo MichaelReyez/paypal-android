@@ -11,11 +11,16 @@ internal class AnalyticsService(
     private val httpRequestFactory: HttpRequestFactory
 ) {
 
-    internal suspend fun sendAnalyticsEvent(name: String) {
+    internal suspend fun sendAnalyticsEvent(name: String, accessToken: String) {
         val timestamp = System.currentTimeMillis()
 
         val analyticsEventData =
-            AnalyticsEventData(name, timestamp, sessionId, deviceInspector.inspect())
+            AnalyticsEventData(
+                name,
+                timestamp,
+                getSessionId(accessToken),
+                deviceInspector.inspect()
+            )
         val httpRequest = httpRequestFactory.createHttpRequestForAnalytics(analyticsEventData)
 
         val response = http.send(httpRequest)
@@ -25,6 +30,16 @@ internal class AnalyticsService(
     }
 
     companion object {
-        private val sessionId = UUID.randomUUID().toString()
+        private lateinit var currentAccessToken: String
+        private fun getSessionId(accessToken: String): String {
+            return if (currentAccessToken == accessToken) sessionId
+            else {
+                currentAccessToken = accessToken
+                sessionId = UUID.randomUUID().toString()
+                sessionId
+            }
+        }
+
+        private var sessionId = UUID.randomUUID().toString()
     }
 }

@@ -23,7 +23,7 @@ class API internal constructor(
                 AnalyticsService(
                     deviceInspector = DeviceInspector(context),
                     http = Http(),
-                    httpRequestFactory = HttpRequestFactory()
+                    httpRequestFactory = HttpRequestFactory(),
                 )
             )
 
@@ -61,6 +61,6 @@ class API internal constructor(
     }
 
     suspend fun sendAnalyticsEvent(name: String) {
-        analyticsService.sendAnalyticsEvent(name)
+        configuration.accessToken?.let { analyticsService.sendAnalyticsEvent(name, it) }
     }
 }
