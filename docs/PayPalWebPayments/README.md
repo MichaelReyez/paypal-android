@@ -98,41 +98,9 @@ payPalWebCheckoutClient.listener = object : PayPalWebCheckoutListener {
 }
 ```
 
-### 4. Create an order
+### 4. Create a request object for launching the PayPal flow
 
-When a user initiates a payment flow, call `v2/checkout/orders` to create an order and obtain an order ID:
-
-**Request**
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw '{
-    "intent": "<CAPTURE|AUTHORIZE>",
-    "purchase_units": [
-        {
-            "amount": {
-                "currency_code": "USD",
-                "value": "5.00"
-            }
-        }
-    ]
-}'
-```
-
-**Response**
-```json
-{
-   "id":"<ORDER_ID>",
-   "status":"CREATED"
-}
-```
-
-The `id` field of the response contains the order ID to pass to your client.
-
-### 5. Create a request object for launching the PayPal flow
-
-Configure your `PayPalWebCheckoutRequest` and include the order ID generated in [step 4](#4-create-an-order):
+Configure your `PayPalWebCheckoutRequest` with an [order ID](../../README#order-id) you from your server.
 
 ```kotlin
 val payPalWebCheckoutRequest = PayPalWebCheckoutRequest("<ORDER_ID>")
@@ -141,13 +109,13 @@ val payPalWebCheckoutRequest = PayPalWebCheckoutRequest("<ORDER_ID>")
 You can also specify one of the follwing funding sources for your order: `PayPal (default)`, `PayLater` or `PayPalCredit`.
 > Click [here](https://developer.paypal.com/docs/checkout/pay-later/us/) for more information on PayPal Pay Later
 
-### 6. Approve the order using the PayPal SDK
+### 5. Approve the order using the PayPal SDK
 
 To start the PayPal Web Checkout flow, call `payPalWebCheckoutClient.start(payPalWebCheckoutRequest)`
 
 When a user completes the PayPal payment flow successfully, the result will be returned to the listener set in [step 3](#3-initiate-the-payments-sdk).
 
-### 7. Capture/Authorize the order
+### 6. Capture/Authorize the order
 
 After receiving a successful result from the `onPayPalWebSuccess()` callback, you can now capture or authorize the order. 
 

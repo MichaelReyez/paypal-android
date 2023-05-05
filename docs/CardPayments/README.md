@@ -45,39 +45,7 @@ val cardClient = CardClient(activity, config)
 cardClient.approveOrderListener = this
 ```
 
-### 3. Create an order
-
-When a user initiates a payment flow, call `v2/checkout/orders` to create an order and obtain an order ID:
-
-**Request**
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw '{
-    "intent": "<CAPTURE|AUTHORIZE>",
-    "purchase_units": [
-        {
-            "amount": {
-                "currency_code": "USD",
-                "value": "5.00"
-            }
-        }
-    ]
-}'
-```
-
-**Response**
-```json
-{
-   "id":"<ORDER_ID>",
-   "status":"CREATED"
-}
-```
-
-The `id` field of the response contains the order ID to pass to your client.
-
-### 4. Create a request containing the card payment details
+### 3. Create a request containing the card payment details
 
 Create a `Card` object containing the user's card details.
 
@@ -98,7 +66,7 @@ val card = Card(
 )
 ```
 
-Attach the card and the order ID from [step 3](#3-create-an-order) to a `CardRequest`. Strong Consumer Authentication (SCA) is enabled by default, so you need to specify a `return_url` to re direct to your app after the SCA challenge finishes. You can optionally set `sca` to `SCA_ALWAYS` if you want to require 3D Secure for every transaction.
+Attach the card and an [order ID](../../README#order-id) from your server to a `CardRequest`. Strong Consumer Authentication (SCA) is enabled by default, so you need to specify a `return_url` to re direct to your app after the SCA challenge finishes. You can optionally set `sca` to `SCA_ALWAYS` if you want to require 3D Secure for every transaction.
 ```kotlin
 val cardRequest  = CardRequest(
     orderID = "<ORDER_ID>",
@@ -137,7 +105,7 @@ override fun onNewIntent(newIntent: Intent?) {
 }
 ```
 
-### 5. Approve the order through the Payments SDK
+### 4. Approve the order through the Payments SDK
 
 Approve the order using your `CardClient`.
 
@@ -169,7 +137,7 @@ fun onApproveOrderThreeDSecureDidFinish() {
 }
 ```
 
-### 6. Capture/Authorize the order
+### 5. Capture/Authorize the order
 
 If you receive a successful result in the client-side flow, you can then capture or authorize the order. 
 

@@ -113,50 +113,19 @@ payPalNativeClient.shippingListener = object : PayPalNativeShippingListener {
 }
 ```
 
-### 4. Create an order
+### 4. Start the PayPal Native checkout flow
 
-When a user initiates a payment flow, call `v2/checkout/orders` to create an order and obtain an order ID:
-
-**Request**
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw '{
-    "intent": "<CAPTURE|AUTHORIZE>",
-    "purchase_units": [
-        {
-            "amount": {
-                "currency_code": "USD",
-                "value": "5.00"
-            }
-        }
-    ]
-}'
-```
-
-**Response**
-```json
-{
-   "id":"<ORDER_ID>",
-   "status":"CREATED"
-}
-```
-
-The `id` field of the response contains the order ID to pass to your client.
-
-### 5. Start the PayPal Native checkout flow
-
-To start the PayPal Native checkout flow, call the `startCheckout` function in `PayPalNativeCheckoutClient`, with the `CreateOrderCallback` and set the order ID from [step 4](#4-create-an-order) in `createOrderActions`:
+To start the PayPal Native checkout flow, create a `PayPalNativeCheckoutRequest` with an [order ID](../../README#order-id) from your server. Then call `startCheckout()` on your `PayPalNativeCheckoutClient`:
 
 ```kotlin
-paypalNativeClient.startCheckout(CreateOrder { createOrderActions ->
-    createOrderActions.set(orderId)
-})
-```
-When a user completes the PayPal payment flow successfully, the result will be returned to the listener set in [step 3](#3-initiate-paypal-native-checkout).
+val paypalRequest = PayPalNativeCheckoutRequest("<ORDER_ID>")
 
-### 6. Capture/Authorize the order
+payPalNativeClient.startCheckout(paypalRequest)
+```
+
+When a user completes the PayPal payment flow successfully, the result will be returned to the listeners set in [step 3](#3-initiate-paypal-native-checkout).
+
+### 5. Capture/Authorize the order
 
 After receiving a successful result from the `onPayPalSuccess()` callback, you can now capture or authorize the order.
 
