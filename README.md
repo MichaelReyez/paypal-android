@@ -1,21 +1,14 @@
-Welcome to the PayPal Android SDK. This library will help you accept Card, PayPal, and Venmo payments in your Android app.
+Welcome to the PayPal Android SDK. This library helps you accept card and PayPal payments in your app.
 
 ![Maven Central](https://img.shields.io/maven-central/v/com.paypal.android/card-payments?style=for-the-badge) ![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.paypal.android/card-payments?server=https%3A%2F%2Foss.sonatype.org&style=for-the-badge)
 
-## FAQ
-### Availability
-The SDK is currently in the development process. This product is being developed fully open source - throughout the development process, we welcome any and all feedback. Aspects of the SDK _will likely_ change as we develop the SDK. We recommend using the SDK in the sandbox environment until an official release is available. This README will be updated with an official release date once it is generally available.
-
-### Contribution
-As the SDK is moved to general availability, we will be adding a contribution guide for developers that would like to contribute to the SDK. If you have suggestions for features that you would like to see in future iterations of the SDK, please feel free to open an issue, PR, or discussion with suggestions. If you want to open a PR but are unsure about our testing strategy, we are more than happy to work with you to add tests to any PRs before work is merged.
-
 ## Support
-The PayPal Android SDK is available for Android SDK 21+. See our [Client Deprecation policy](https://developer.paypal.com/braintree/docs/guides/client-sdk/deprecation-policy/android/v4) to plan for updates.
+The PayPal Android SDK is available for **Android SDK 21+**. See our [Client Deprecation policy](https://developer.paypal.com/braintree/docs/guides/client-sdk/deprecation-policy/android/v4) to plan for updates.
 
-## Languages
-This SDK is written in Kotlin and supports both Kotlin and Java integrations. See the [Java Demo App](#TODO: link demo when created) and [Kotlin Demo App](/Demo) for sample integrations. 
+### Languages
+This SDK is written in Kotlin and supports both Kotlin and Java integrations.
 
-## Including the SDK
+## Installing the SDK
 You can support a specific payment method by adding its corresponding feature module as a dependency in your app's `build.gradle` file.
 For example, to support both CardPayments and PayPalWebPayments in your app include the following dependencies with the current version:
 
@@ -46,59 +39,39 @@ dependencies {
 }
 ```
 
-## Access Token
+## Demo
+
+See our[Kotlin Demo App](/Demo) for a sample integration. 
+
+## Integrating the SDK
+
+An `ACCESS_TOKEN` and `ORDER_ID` are required for all payment method flows.
+
+### Access Token
 
 The PayPal SDK uses access tokens for authentication.
 
-> The following example can be adapted to any server-side language/framework of your choice. We use command-line curl to demonstrate the overall composition of the Access Token HTTP request.
+On your server, fetch an `ACCESS_TOKEN` using PayPal's [Authentication API](https://developer.paypal.com/api/rest/authentication/). 
 
-To create an access token:
+_Note: This access token is only for the sandbox environment. You’ll need to get a live access token when you’re ready to go live. To do so, replace the request sandbox URL with: https://api-m.paypal.com/v1/oauth2/token._
 
-1. Follow the steps in [Get Started](https://developer.paypal.com/api/rest/#link-getstarted) to obtain a client ID and secret from the PayPal Developer site.
-1. Make an HTTP request with Basic Authentication using client ID and secret to fetch an access token:
+### Order ID
 
-**Request**
-```bash
-# for LIVE environment
-curl -X POST https://api.paypal.com/v1/oauth2/token \
--u $CLIENT_ID:$CLIENT_SECRET \
--H 'Content-Type: application/x-www-form-urlencoded' \
--d 'grant_type=client_credentials&response_type=token&return_authn_schemes=true'
+On your server, use the [Orders v2 API](https://developer.paypal.com/docs/api/orders/v2) to create an `ORDER_ID`. Use your `ACCESS_TOKEN` from in the Authorization header.
 
-# for SANDBOX environment
-curl -X POST https://api.sandbox.paypal.com/v1/oauth2/token \
--u $CLIENT_ID:$CLIENT_SECRET \
--H 'Content-Type: application/x-www-form-urlencoded' \
--d 'grant_type=client_credentials&response_type=token&return_authn_schemes=true'
-```
+_Note: You’ll need to pass either `AUTHORIZE` or `CAPTURE` as the intent type. This type must match the `/authorize` or `/capture` endpoint you use to process your order at the end of the integration._
 
-:warning:&nbsp;Make sure the environment variables for `CLIENT_ID` and `CLIENT_SECRET` are set.
-
-**Response**
-
-```json
-{
-  "scope": "...",
-  "access_token": "<ACCESS_TOKEN>",
-  "token_type": "Bearer",
-  "app_id": "...",
-  "expires_in": 32400,
-  "nonce": "..."
-}
-```
-
-Use the value for `access_token` in the response to create an instance of `CoreConfig` to use with any of the SDK's feature clients.
-
-## Modules
+### Module
 
 Each feature module has its own onboarding guide:
 
 - [CardPayments](docs/CardPayments)
-- [PaymentButtons](docs/PaymentButtons)
 - [PayPal Web Payments](docs/PayPalWebPayments)
 - [PayPal Native Payments](docs/PayPalNativePayments)
+- [PaymentButtons](docs/PaymentButtons)
 
 ## Release Process
+
 This SDK follows [Semantic Versioning](https://semver.org/). This SDK is published to Maven Central. The release process is automated via GitHub Actions.
 
 ## Testing
@@ -134,7 +107,3 @@ To run code coverage analysis:
 ```
 
 The results are then generated in each module's respective `build/jacoco` folder (e.g. `CardPayments/build/jacoco`).
-
-## Contributing
-
-See our [GitHub Guidelines](#TODO: determine where this document will live and update link) for git practices followed in this project.
