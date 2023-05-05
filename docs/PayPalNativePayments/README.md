@@ -40,7 +40,7 @@ A return URL is required for redirecting users back to the app after authenticat
 
 ### 3. Initiate PayPal Native checkout
 
-Create a `CoreConfig` using an [access token](../../README.md#access-token):
+Create a `CoreConfig` using an [access token](../../README.md#1-access-token):
 
 ```kotlin
 val coreConfig = CoreConfig("<ACCESS_TOKEN>", environment = Environment.SANDBOX)
@@ -115,7 +115,7 @@ payPalNativeClient.shippingListener = object : PayPalNativeShippingListener {
 
 ### 4. Start the PayPal Native checkout flow
 
-To start the PayPal Native checkout flow, create a `PayPalNativeCheckoutRequest` with an [order ID](../../README#order-id) from your server. Then call `startCheckout()` on your `PayPalNativeCheckoutClient`:
+To start the PayPal Native checkout flow, create a `PayPalNativeCheckoutRequest` with an [order ID](../../README#2-order-id) from your server. Then call `startCheckout()` on your `PayPalNativeCheckoutClient`:
 
 ```kotlin
 val paypalRequest = PayPalNativeCheckoutRequest("<ORDER_ID>")
@@ -127,25 +127,7 @@ When a user completes the PayPal payment flow successfully, the result will be r
 
 ### 5. Capture/Authorize the order
 
-After receiving a successful result from the `onPayPalSuccess()` callback, you can now capture or authorize the order.
-
-Call `capture` to capture funds immediately:
-
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/<ORDER_ID>/capture' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw ''
-```
-
-Call `authorize` to place funds on hold:
-
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/<ORDER_ID>/authorize' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw ''
-```
+After receiving a successful result from the `onPayPalSuccess()` callback, you can now [capture or authorize the order](../../README#4-authorize-or-capture-payment).
 
 ## Billing Agreement
 

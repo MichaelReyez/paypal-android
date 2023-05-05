@@ -32,7 +32,7 @@ dependencies {
 
 ### 2. Initiate the Payments SDK
 
-Create a `CoreConfig` using an [access token](../../README.md#access-token):
+Create a `CoreConfig` using an [access token](../../README.md#1-access-token):
 
 ```kotlin
 val config = CoreConfig("<ACCESS_TOKEN>", environment = Environment.SANDBOX)
@@ -66,7 +66,7 @@ val card = Card(
 )
 ```
 
-Attach the card and an [order ID](../../README#order-id) from your server to a `CardRequest`. Strong Consumer Authentication (SCA) is enabled by default, so you need to specify a `return_url` to re direct to your app after the SCA challenge finishes. You can optionally set `sca` to `SCA_ALWAYS` if you want to require 3D Secure for every transaction.
+Attach the card and an [order ID](../../README#2-order-id) from your server to a `CardRequest`. Strong Consumer Authentication (SCA) is enabled by default, so you need to specify a `return_url` to re direct to your app after the SCA challenge finishes. You can optionally set `sca` to `SCA_ALWAYS` if you want to require 3D Secure for every transaction.
 ```kotlin
 val cardRequest  = CardRequest(
     orderID = "<ORDER_ID>",
@@ -139,25 +139,7 @@ fun onApproveOrderThreeDSecureDidFinish() {
 
 ### 5. Capture/Authorize the order
 
-If you receive a successful result in the client-side flow, you can then capture or authorize the order. 
-
-Call `authorize` to place funds on hold:
-
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/<ORDER_ID>/authorize' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw ''
-```
-
-Call `capture` to capture funds immediately:
-
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/<ORDER_ID>/capture' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw ''
-```
+If you receive a successful result in the client-side flow, you can then [capture or authorize the order](../../README#4-authorize-or-capture-payment).
 
 ## Test and Go Live
 

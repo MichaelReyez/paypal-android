@@ -61,7 +61,7 @@ override fun onNewIntent(newIntent: Intent?) {
 
 ### 3. Initiate the Payments SDK
 
-Create a `CoreConfig` using an [access token](../../README.md#access-token):
+Create a `CoreConfig` using an [access token](../../README.md#1-access-token):
 
 ```kotlin
 val config = CoreConfig("<ACCESS_TOKEN>", environment = Environment.SANDBOX)
@@ -100,7 +100,7 @@ payPalWebCheckoutClient.listener = object : PayPalWebCheckoutListener {
 
 ### 4. Create a request object for launching the PayPal flow
 
-Configure your `PayPalWebCheckoutRequest` with an [order ID](../../README#order-id) you from your server.
+Configure your `PayPalWebCheckoutRequest` with an [order ID](../../README#2-order-id) you from your server.
 
 ```kotlin
 val payPalWebCheckoutRequest = PayPalWebCheckoutRequest("<ORDER_ID>")
@@ -117,25 +117,7 @@ When a user completes the PayPal payment flow successfully, the result will be r
 
 ### 6. Capture/Authorize the order
 
-After receiving a successful result from the `onPayPalWebSuccess()` callback, you can now capture or authorize the order. 
-
-Call `capture` to capture funds immediately:
-
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/<ORDER_ID>/capture' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw ''
-```
-
-Call `authorize` to place funds on hold:
-
-```bash
-curl --location --request POST 'https://api.sandbox.paypal.com/v2/checkout/orders/<ORDER_ID>/authorize' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <ACCESS_TOKEN>' \
---data-raw ''
-```
+After receiving a successful result from the `onPayPalWebSuccess()` callback, you can now [capture or authorize the order](../../README#4-authorize-or-capture-payment).
 
 ## Test and go live
 

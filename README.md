@@ -47,7 +47,7 @@ See our[Kotlin Demo App](/Demo) for a sample integration.
 
 An `ACCESS_TOKEN` and `ORDER_ID` are required for all payment method flows.
 
-### Access Token
+### 1. Access Token
 
 The PayPal SDK uses access tokens for authentication.
 
@@ -55,20 +55,46 @@ On your server, fetch an `ACCESS_TOKEN` using PayPal's [Authentication API](http
 
 _Note: This access token is only for the sandbox environment. You’ll need to get a live access token when you’re ready to go live. To do so, replace the request sandbox URL with: https://api-m.paypal.com/v1/oauth2/token._
 
-### Order ID
+### 2. Order ID
 
 On your server, use the [Orders v2 API](https://developer.paypal.com/docs/api/orders/v2) to create an `ORDER_ID`. Use your `ACCESS_TOKEN` from in the Authorization header.
 
 _Note: You’ll need to pass either `AUTHORIZE` or `CAPTURE` as the intent type. This type must match the `/authorize` or `/capture` endpoint you use to process your order at the end of the integration._
 
-### Module
+### 3. Payment Method modules
 
 Each feature module has its own onboarding guide:
 
-- [CardPayments](docs/CardPayments)
+- [Card Payments](docs/CardPayments)
 - [PayPal Web Payments](docs/PayPalWebPayments)
 - [PayPal Native Payments](docs/PayPalNativePayments)
-- [PaymentButtons](docs/PaymentButtons)
+- [Payment Buttons](docs/PaymentButtons)
+
+### 4. Authorize or Capture payment
+
+After the feature client delivers a success result, submit your `ORDER_ID` for authorization or capture.
+
+Call the [`/authorize`](https://developer.paypal.com/docs/api/orders/v2/#orders_authorize) endpoint of the Orders V2 API</a> to place the money on hold:
+
+**cURL request**
+
+```
+curl --location --request POST 'https://api-m.sandbox.paypal.com/v2/checkout/orders/ORDER_ID/authorize' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ACCESS_TOKEN' \
+--data-raw ''
+```
+
+Call the [`/capture`](https://developer.paypal.com/docs/api/orders/v2/#orders_capture) endpoint of the Orders V2 API</a> to capture the money immediately:
+
+**cURL request**
+
+```
+curl --location --request POST 'https://api-m.sandbox.paypal.com/v2/checkout/orders/ORDER_ID/capture' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ACCESS_TOKEN' \
+--data-raw ''
+```
 
 ## Release Process
 
