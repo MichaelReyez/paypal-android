@@ -89,13 +89,10 @@ payPalNativeClient.shippingListener = object : PayPalNativeShippingListener {
     ) {
         // called when the user updates their chosen shipping address
 
-        // OPTIONAL: if you patch your order server-side, call actions.approve() or actions.reject() once complete.
-        // try {
-        //     patchOrder()
-        //     actions.approve()
-        // } catch {
-        //     actions.reject()
-        // }
+        // REQUIRED: you must call actions.approve() or actions.reject() in this callback
+        actions.approve()
+
+        // OPTIONAL: you can optionally patch your order. Once complete, call actions.approve() if successful or actions.reject() if not.
     }
 
     override fun onPayPalNativeShippingMethodChange(
