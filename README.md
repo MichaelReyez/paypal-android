@@ -41,7 +41,7 @@ dependencies {
 
 ## Demo
 
-See our[Kotlin Demo App](/Demo) for a sample integration. 
+See our [Kotlin Demo App](/Demo) for a sample integration. 
 
 ## Integrating the SDK
 
