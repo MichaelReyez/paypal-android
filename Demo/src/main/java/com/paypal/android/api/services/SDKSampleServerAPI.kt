@@ -55,9 +55,6 @@ class SDKSampleServerAPI {
         @POST("/orders")
         suspend fun createOrder(@Body order: OrderRequest): Order
 
-        @GET("/client_id")
-        suspend fun fetchClientId(): ClientId
-
         @GET("/orders/{orderId}")
         suspend fun getOrder(@Path("orderId") orderId: String): ResponseBody
 
@@ -73,6 +70,8 @@ class SDKSampleServerAPI {
         @POST("/orders/{orderId}/authorize")
         suspend fun authorizeOrder(@Path("orderId") orderId: String): ResponseBody
     }
+
+    var clientId = DEFAULT_CLIENT_ID ?: SELECTED_MERCHANT_INTEGRATION.clientId
 
     private val serviceMap: Map<MerchantIntegration, RetrofitService>
 
@@ -108,9 +107,6 @@ class SDKSampleServerAPI {
     private fun findService(merchantIntegration: MerchantIntegration) =
         serviceMap[merchantIntegration]
             ?: throw AssertionError("Couldn't find retrofit service for ${merchantIntegration.name}")
-
-    suspend fun fetchClientId(merchantIntegration: MerchantIntegration = SELECTED_MERCHANT_INTEGRATION) =
-        DEFAULT_CLIENT_ID ?: findService(merchantIntegration).fetchClientId().value
 
     suspend fun createOrder(
         orderRequest: CreateOrderRequest,
