@@ -29,6 +29,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.paypal.android.api.services.SDKSampleServerAPI
 import com.paypal.android.cardpayments.ApproveOrderListener
+import com.paypal.android.cardpayments.CardAuthChallenge
+import com.paypal.android.cardpayments.CardAuthChallengeLauncher
 import com.paypal.android.cardpayments.CardClient
 import com.paypal.android.cardpayments.model.CardResult
 import com.paypal.android.corepayments.CoreConfig
@@ -50,10 +52,12 @@ class ApproveOrderProgressFragment : Fragment() {
     @Inject
     lateinit var sdkSampleServerAPI: SDKSampleServerAPI
 
-    private lateinit var cardClient: CardClient
+    private var _cardClient: CardClient? = null
 
     @Inject
     lateinit var dataCollectorHandler: DataCollectorHandler
+
+    private val cardAuthChallengeLauncher = CardAuthChallengeLauncher()
 
     private val args: ApproveOrderProgressFragmentArgs by navArgs()
     private val viewModel by viewModels<ApproveOrderProgressViewModel>()
@@ -64,6 +68,13 @@ class ApproveOrderProgressFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        cardAuthChallengeLauncher.getResult(requireActivity())?.let { authChallengeResult ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                val cardClient = getCardClient()
+                cardClient.continueApproveOrder(authChallengeResult)
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             executeCardRequestFromArgs()
         }
@@ -80,14 +91,21 @@ class ApproveOrderProgressFragment : Fragment() {
         }
     }
 
+    private suspend fun getCardClient(): CardClient {
+        if (_cardClient == null) {
+            val clientId = sdkSampleServerAPI.fetchClientId()
+
+            val configuration = CoreConfig(clientId = clientId)
+            _cardClient = CardClient(requireActivity(), configuration)
+        }
+        return _cardClient!!
+    }
+
     private suspend fun executeCardRequestFromArgs() {
         val cardRequest = args.cardRequest
 
         viewModel.appendEventToLog(ApproveOrderEvent.Message("Fetching Client ID..."))
-        val clientId = sdkSampleServerAPI.fetchClientId()
-
-        val configuration = CoreConfig(clientId = clientId)
-        cardClient = CardClient(requireActivity(), configuration)
+        val cardClient = getCardClient()
 
         cardClient.approveOrderListener = object : ApproveOrderListener {
             override fun onApproveOrderSuccess(result: CardResult) {
@@ -106,7 +124,7 @@ class ApproveOrderProgressFragment : Fragment() {
                 viewModel.appendEventToLog(ApproveOrderEvent.Message("USER CANCELED"))
             }
 
-            override fun onApproveOrderThreeDSecureWillLaunch() {
+            override fun didReceiveAuthChallenge(authChallenge: CardAuthChallenge) {
                 viewModel.appendEventToLog(ApproveOrderEvent.Message("3DS Auth Requested"))
             }
 
