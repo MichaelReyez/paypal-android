@@ -52,8 +52,6 @@ class ApproveOrderProgressFragment : Fragment() {
     @Inject
     lateinit var sdkSampleServerAPI: SDKSampleServerAPI
 
-    private var _cardClient: CardClient? = null
-
     @Inject
     lateinit var dataCollectorHandler: DataCollectorHandler
 
@@ -61,6 +59,8 @@ class ApproveOrderProgressFragment : Fragment() {
 
     private val args: ApproveOrderProgressFragmentArgs by navArgs()
     private val viewModel by viewModels<ApproveOrderProgressViewModel>()
+
+    private var _cardClient: CardClient? = null
 
     @ExperimentalMaterial3Api
     override fun onCreateView(
